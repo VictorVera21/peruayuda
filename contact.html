@@ -89,24 +89,24 @@
     <div class="row">
       <div class="col-lg-8 mb-4">
         <h3>Send us a Message</h3>
-        <form name="contact-form" id="contact-form" method="post" action="contact.php">
+        <form method="post" action="contact.php">
           <div class="control-group form-group">
             <div class="controls">
-              <label>Full Name:</label>
-              <input type="text" class="form-control" name="nombre" id="nombre required data-validation-required-message="Please enter your name.">
+              <label for="nombre">Nombre:</label>
+              <input type="text" class="form-control" name="nombre" id="nombre required>
               <p class="help-block"></p>
             </div>
           </div>
           <div class="control-group form-group">
             <div class="controls">
-              <label>Email Address:</label>
-              <input type="email" name="email" class="form-control" id="email" required data-validation-required-message="Please enter your email address.">
+              <label for="email">Email: </label>
+              <input type="email" name="email" class="form-control" id="email" required>
             </div>
           </div>
           <div class="control-group form-group">
             <div class="controls">
-              <label>Message:</label>
-              <textarea name="mensaje" rows="10" cols="100" class="form-control" id="mensaje" required data-validation-required-message="Please enter your message" maxlength="999" style="resize:none"></textarea>
+              <label for="mensaje">Mensaje:</label>
+              <textarea name="mensaje" rows="10" cols="100" class="form-control" id="mensaje" required maxlength="999" style="resize:none"></textarea>
             </div>
           </div>
           <div id="success"></div>
