@@ -87,41 +87,42 @@
     <!-- Buscados / eventos-->
     <div class="container">
         <div class="row">
-            <div class="col-lg-7 col-sm-6 portfolio-item">
+            <div class="col-lg-7 col-sm-9 portfolio-item">
                 <form action="#" autocomplete="off" method="POST" class="form1">
-                    <input type="text" class="form-control form-control-lg" placeholder="Escribe tu empresa..." name="busqueda" id="buscador">
+                    <input type="text" class="form-control"  style="text-transform: uppercase;" placeholder="Escribe tu empresa..." name="busqueda" id="buscador">
                     <!-- For success/fail messages -->
                     <br>
-                    <button type="submit" style="width: 100px;" class="btn btn-primary">Buscar</button>
+                    <div style="text-align: center;">
+                        <button type="submit" style="width: 100px;" class="btn btn-primary">Buscar</button>
+                    </div>
                     <br>
                     <?php
                     include_once("functions/conexion.php");
 
                     if (isset($_POST['busqueda'])) {
                         $busqueda = $_POST['busqueda'];
-                        $sql = "SELECT em.id, em.nombre, cat.nomcat FROM empresa em INNER JOIN cat_empresa cat on 
-                        cat.Id = em.id_cat WHERE nombre LIKE '%" . $busqueda . "%' OR
+                        $sql = "SELECT em.id, em.nomempre, cat.nomcat FROM empresa em INNER JOIN categoria cat on 
+                        cat.id = em.idcat WHERE nomempre LIKE '%" . $busqueda . "%' OR
                         nomcat LIKE '%" . $busqueda . "%'";
                         $result = mysqli_query($conexion, $sql);
                         if ($result->num_rows >= 1) {
                             echo '<br>';
-                            echo '<h3> Resultados </h3>';
-                            echo '<br>';
-
-                            while ($item = mysqli_fetch_assoc($result)) {
-                                echo '<div class="media">';
-                                echo '
-                                    <a class="btn btn-success" href="comentarioempresa.php?id=' . $item['id'] . '">
-                                        <div class="media-body">
-                                            <h4>' . $item['id'] . '</h4>
-                                            <h4>' . $item['nombre'] . '</h4>
-                                            <span>' . $item['nomcat'] . '</span>
-                                        </div>
-                                    </a>
-                                    ';
+                            echo '<div class="col-lg-12 col-sm-12 portfolio-item">';
+                                echo '<div class="card mb-3" style="background-color: white;">';
+                                    echo '<div class="card-header text-center">Resultados</div>';
+                                            while ($item = mysqli_fetch_assoc($result)) {
+                                                echo '<div class="media" style="font-size: 16px;">';
+                                                    echo '<div class="card-body">
+                                                                <a style="color: black; text-transform: uppercase;" href="comentarioempresa.php?id=' . $item['id'] . '">
+                                                                    <h6>Nombre de la empresa: ' . $item['nomempre'] . '</h6>
+                                                                    <span>Rubro: ' . $item['nomcat'] . '</span>
+                                                                </a>
+                                                        </div>';
+                                            echo '</div>';
+                                    
+                                            }
+                                    echo '</div>';
                                 echo '</div>';
-                                echo '<br>';
-                            }
                         } else {
                             echo "<br><center><h4>No hemos encontrado ningun registro con la palabra " . "<strong class='text-uppercase'>" . $busqueda . "</strong><h4><center>";
                         }
@@ -129,9 +130,9 @@
                     ?>
                 </form>
             </div>
-            <br><br><br><br>
+            <br><br>
             <div class="col-lg-5 col-sm-6 portfolio-item text-center">
-                <div class="card bg-light mb-3" style="max-width: 30rem;">
+                <div class="card bg-light mb-3">
                     <div class="card-header">Contacto</div>
                     <div class="card-body">
                         <div class="col-lg-4 mb-4">
@@ -156,7 +157,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="card bg-light mb-3" style="max-width: 30rem;">
+                <div class="card bg-light mb-3">
                     <div class="card-header">Contacto</div>
                     <div class="card-body">
                         <div class="col-lg-4 mb-4">
