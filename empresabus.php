@@ -1,3 +1,24 @@
+<?php
+include_once 'functions/conexion2.php';
+
+//Lamar a todas las empresa
+$sql = 'SELECT * FROM empresa';
+$sentecia = $pdo->prepare($sql);
+$sentecia->execute();
+
+$resultado = $sentecia->fetchAll();
+
+//var_dump($resultado);
+$empresa_x_pagina = 5;
+
+//contar empresas de nuestra bd
+$total_empresa = $sentecia->rowCount();
+$paginas = $total_empresa / $empresa_x_pagina;
+$paginas = ceil($paginas);
+
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -88,44 +109,69 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-7 col-sm-9 portfolio-item">
-                <form action="#" autocomplete="off" method="POST" class="form1">
-                    <input type="text" class="form-control"  style="text-transform: uppercase;" placeholder="Escribe tu empresa..." name="busqueda" id="buscador">
-                    <!-- For success/fail messages -->
-                    <br>
-                    <div style="text-align: center;">
-                        <button type="submit" style="width: 100px;" class="btn btn-primary">Buscar</button>
-                    </div>
-                    <br>
-                    <?php
-                    include_once("functions/conexion.php");
+                <h2>Empresas</h2>
+                <?php
+                if (!$_GET) {
+                    header('Location:empresabus.php?pagina=1');
+                }
+                if ($_GET['pagina']>$paginas || $_GET['pagina']<=0) {
+                    header('Location:empresabus.php?pagina=1');
+                }
 
-                    if (isset($_POST['busqueda'])) {
-                        $busqueda = $_POST['busqueda'];
-                        $sql = "SELECT em.id, em.nomempre, cat.nomcat FROM empresa em INNER JOIN categoria cat on 
-                        cat.id = em.idcat WHERE nomempre LIKE '" . $busqueda . "%' ORDER BY nomempre ASC";
-                        $result = mysqli_query($conexion, $sql);
-                        if ($result->num_rows >= 1) {
-                            echo '<div class="col-lg-12 col-sm-12 portfolio-item">';
-                                echo '<div class="card mb-3" style="background-color: white;">';
-                                    echo '<div class="card-header text-center">Resultados</div>';
-                                            while ($item = mysqli_fetch_assoc($result)) {
-                                                echo '<div class="media" style="font-size: 16px;">';
-                                                    echo '<div class="card-body">
-                                                                <a style="color: black; text-transform: uppercase;" href="comentarioempresa.php?id=' . $item['id'] . '">
-                                                                    <h6>Empresa: ' . $item['nomempre'] . '</h6>
-                                                                    <span>Rubro: ' . $item['nomcat'] . '</span>
-                                                                </a>
-                                                        </div>';
-                                            echo '</div>';                                   
-                                            }
-                                    echo '</div>';
-                                echo '</div>';
-                        } else {
-                            echo "<br><center><h4>No hemos encontrado ningun registro con la palabra " . "<strong class='text-uppercase'>" . $busqueda . "</strong><h4><center>";
-                        }
-                    }
-                    ?>
-                </form>
+                $iniciar = ($_GET['pagina'] - 1) * $empresa_x_pagina;
+                $sql_empresa = 'SELECT * FROM empresa ORDER BY nomempre ASC LIMIT :iniciar,:nempresa';
+                $sentencia_empresa = $pdo->prepare($sql_empresa);
+                $sentencia_empresa->bindParam(':iniciar', $iniciar, PDO::PARAM_INT);
+                $sentencia_empresa->bindParam(':nempresa', $empresa_x_pagina, PDO::PARAM_INT);
+                $sentencia_empresa->execute();
+
+                $resultado_empresa = $sentencia_empresa->fetchAll();
+
+                ?>
+
+                <hr>
+                <div class="col-lg-12 col-sm-6">
+                    <div class="card mb-3" style="background-color: white;">
+                        <div class="card-header text-center">Resultados</div>
+                        <?php foreach ($resultado_empresa as $empresa) { ?>
+                            <div class="media" style="font-size: 16px;">
+                                <a style="color: black; text-transform: uppercase;" 
+                                href="comentarioempresa.php?id=<?php echo $empresa['id'] ?>">
+                                    <div class="card-body">
+                                        <?php echo $empresa['nomempre'] ?>
+                                    </div>
+                                </a>
+                            </div>
+                            <hr>
+                        <?php } ?>
+                    </div>
+                </div>
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination">
+                        <li class="page-item
+                <?php echo $_GET['pagina'] <= 1 ? 'disabled' : '' ?>">
+                            <a class="page-link" href="empresabus.php?pagina=<?php echo $_GET['pagina'] - 1 ?>">
+                                Anterior
+                            </a>
+                        </li>
+
+                        <?php for ($i = 0; $i < $paginas; $i++) { ?>
+                            <li class="page-item 
+                    <?php echo $_GET['pagina'] == $i + 1 ? 'active' : '' ?>">
+                                <a class="page-link" href="empresabus.php?pagina=<?php echo $i + 1 ?>">
+                                    <?php echo $i + 1 ?>
+                                </a>
+                            </li>
+                        <?php } ?>
+                        <li class="page-item
+                <?php echo $_GET['pagina'] >= $paginas ? 'disabled' : '' ?>">
+                            <a class="page-link" href="empresabus.php?pagina=<?php echo $_GET['pagina'] + 1 ?>">
+                                Siguiente
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+
             </div>
             <br><br>
             <div class="col-lg-5 col-sm-6 portfolio-item text-center">

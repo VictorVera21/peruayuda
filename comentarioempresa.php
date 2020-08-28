@@ -99,7 +99,7 @@ $resul = mysqli_fetch_assoc($id2);
                 <button type="button" class="btn btn-danger " style="margin: 10px;" data-toggle="modal" data-target="#staticBackdrop">
                     Agregar Comentario
                 </button>
-                <a href="buscadorempresa.php" style="margin: 10px;" class="btn btn-danger">Buscar otro empresa</a>
+                <a href="empresabus.php?pagina=1" style="margin: 10px;" class="btn btn-danger">Buscar otro empresa</a>
                 <!-- Modal -->
                 <div class="modal fade" id="staticBackdrop" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                     <div class="modal-dialog">
